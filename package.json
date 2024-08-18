@@ -1,0 +1,20 @@
+{
+  "name": "nodejs-criando-biblioteca",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cli.ts",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/cli.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrew",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  }
+}

@@ -1,9 +1,10 @@
+import { Command } from 'commander'
 import fs from 'fs'
 import path from 'path'
 import { handleError } from './errors/functionError.ts'
+import { buildDuplicateWordsText, createUniqueFile } from './helpers.ts'
 import { countWords } from './index.ts'
-import { buildDuplicateWordsText } from './helpers.ts'
-import { Command } from 'commander';
+
 const program = new Command();
 
 program
@@ -14,7 +15,7 @@ program
 program.command('count')
 	.arguments('<input> <output>')
 	.option('-i, --input <string>', 'caminho do arquivo de entrada')
-	.option('-o, --output <string>', 'camino do arquivo de saída')
+	.option('-o, --output <string>', 'caminho do arquivo de saída')
 	.action((input, output) => {
 		const pathOutput = path.resolve(output)
 		const pathInput = path.resolve(input)
@@ -31,15 +32,19 @@ function processFile(input: string, output: string) {
 		try {
 			if (err) throw err
 			const wordStatistics = countWords(text)
-			createAndSaveFile(wordStatistics, output)
+			const fileName = path.basename(input)
+			createAndSaveFile(wordStatistics, output, fileName)
 		} catch (error: any) {
 			handleError(error)
 		}
 	})
 }
 
-async function createAndSaveFile(listWords, path) {
-	const outputFile = `${path}/resultado.txt`
+async function createAndSaveFile(listWords: { [key: string]: number }[], path: string, fileName: string) {
+	const outputFile = `${path}/${fileName}_resultado.txt`
+
+	createUniqueFile(fileName, outputFile, path)
+
 	const textWords = buildDuplicateWordsText(listWords)
 	try {
 		await fs.promises.writeFile(outputFile, textWords)
